@@ -1,0 +1,10 @@
+first name,last name,email,role description,team
+Abbey,Johnston,abbey@example.com,"Abbey's responsibilities:
+- main product
+- code reviews",Developers
+Caitlyn,,,,Design
+Ettie,Hauck,ettie@example.com,,Developers
+Vladimir,Vladimirovich,,,Management
+Melissa,Wisozk,melissa@example.com,,Design 
+Ramön,Lubowitz,ramon@example.com,,Design
+Tatum,Bérgnaum,tatum@example.com,,Developers
