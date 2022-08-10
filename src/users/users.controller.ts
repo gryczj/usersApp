@@ -10,6 +10,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import * as CSVToJSON from 'csvtojson';
 import { Team } from './team.entity';
 import { User } from './user.entity';
+import { Express } from 'express';
 
 @Controller('users')
 export class UsersController {
