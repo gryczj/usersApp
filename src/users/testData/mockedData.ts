@@ -46,34 +46,30 @@ export const inputUserDataMock = [
   },
 ];
 
-export const teamMembersDataMock = [
+export const team1MembersDataMock = [
   {
+    firstName: 'Name1',
+    lastName: 'LastName1',
+    email: 'name1@email.com',
+    roleDescription: 'role',
     team: 'team1',
-    users: [
-      {
-        firstName: 'Name1',
-        lastName: 'LastName1',
-        email: 'name1@email.com',
-        roleDescription: 'role',
-      },
-      {
-        firstName: 'Name3',
-        lastName: 'LastName3',
-        email: 'name3@email.com',
-        roleDescription: 'role',
-      },
-    ],
   },
   {
+    firstName: 'Name3',
+    lastName: 'LastName3',
+    email: 'name3@email.com',
+    roleDescription: 'role',
+    team: 'team1',
+  },
+];
+
+export const team2MembersDataMock = [
+  {
+    firstName: 'Name2',
+    lastName: 'LastName2',
+    email: 'name2@email.com',
+    roleDescription: 'role',
     team: 'team2',
-    users: [
-      {
-        firstName: 'Name2',
-        lastName: 'LastName2',
-        email: 'name2@email.com',
-        roleDescription: 'role',
-      },
-    ],
   },
 ];
 

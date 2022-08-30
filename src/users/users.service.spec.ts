@@ -1,14 +1,14 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UsersService } from './users.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { User } from './user.entity';
-import { Team } from './team.entity';
+import { InputUser, User } from './dto/user.entity';
+import { Team } from './dto/team.entity';
 import {
   inputUserDataMock,
   teamDataMock,
   teamMembersDataMock,
   userDataMock,
-} from './mockedData';
+} from './testData/mockedData';
 
 describe('UsersService', () => {
   let service: UsersService;
@@ -64,7 +64,7 @@ describe('UsersService', () => {
   });
 
   it('when getAllTeamsMembers is called, queries for user and team tables are created', async () => {
-    const result = await service.getAllTeamsMembers();
+    const result = await service.getTeamMembers();
     expect(result).toEqual(teamMembersDataMock);
     expect(userRepositoryMock.createQueryBuilder).toHaveBeenCalledWith('user');
     expect(userRepositoryMock.createQueryBuilder).toHaveBeenCalledTimes(1);
@@ -76,9 +76,8 @@ describe('UsersService', () => {
     const numberOfUser = inputUserDataMock.length;
     const numberOfTeam = teamDataMock.length;
 
-    // I would add new input type for User
     const result = await service.uploadData(
-      inputUserDataMock as unknown as User[],
+      inputUserDataMock as unknown as InputUser[],
     );
     expect(result).toEqual({ result: 'DATA SAVED' });
     expect(userRepositoryMock.create).toHaveBeenCalledTimes(numberOfUser);

@@ -24,8 +24,18 @@ export class User {
   @Column()
   roleDescription: string;
 
-  @Column()
-  @ManyToOne((type) => Team, (team) => team.name)
-  @JoinColumn()
+  @ManyToOne((type) => Team)
+  team: Team;
+}
+
+export class InputUser {
+  firstName: string;
+
+  lastName: string;
+
+  email: string;
+
+  roleDescription: string;
+
   team: string;
 }

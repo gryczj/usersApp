@@ -1,6 +1,7 @@
 import {
   Controller,
   Get,
+  Param,
   Post,
   UploadedFile,
   UseInterceptors,
@@ -8,9 +9,9 @@ import {
 import { UsersService } from './users.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import * as CSVToJSON from 'csvtojson';
-import { Team } from './team.entity';
-import { User } from './user.entity';
+import { User } from './dto/user.entity';
 import { Express } from 'express';
+import { Team } from './dto/team.entity';
 
 @Controller('users')
 export class UsersController {
@@ -20,9 +21,17 @@ export class UsersController {
   @UseInterceptors(FileInterceptor('file'))
   async uploadCSVFile(
     @UploadedFile() file: Express.Multer.File,
-  ): Promise<{ result: string }> {
+  ): Promise<{ code: number; response: string }> {
     const users = await CSVToJSON().fromString(file.buffer.toString());
-    return this.usersService.uploadData(users);
+    try {
+      await this.usersService.uploadData(users);
+    } catch (e) {
+      throw Error(e);
+    }
+    return {
+      code: 200,
+      response: 'SUCCESS',
+    };
   }
 
   @Get('/all')
@@ -30,8 +39,13 @@ export class UsersController {
     return this.usersService.getUsers();
   }
 
-  @Get('/groupedByTeam')
-  async getAllTeamsMembers(): Promise<{ team: Team; users: User[] }[]> {
-    return this.usersService.getAllTeamsMembers();
+  @Get('/members/:teamName')
+  async getTeamMembers(@Param('teamName') teamName: string): Promise<User[]> {
+    return this.usersService.getTeamMembers(teamName);
+  }
+
+  @Get('/teams')
+  async getTeams(): Promise<Team[]> {
+    return this.usersService.getTeams();
   }
 }

@@ -4,7 +4,11 @@ import * as fs from 'fs';
 import * as streamBuffer from 'stream-buffers';
 import * as Path from 'path';
 import { UsersService } from './users.service';
-import { teamMembersDataMock, userDataMock } from './mockedData';
+import {
+  team1MembersDataMock,
+  team2MembersDataMock,
+  userDataMock,
+} from './testData/mockedData';
 
 const fileToBuffer = (filename) => {
   const readStream = fs.createReadStream(filename);
@@ -29,10 +33,7 @@ describe('UsersController', () => {
   beforeEach(async () => {
     userServiceMock = {
       uploadData: jest.fn().mockReturnValue({ result: 'DATA SAVED' }),
-      getUsers: jest.fn().mockImplementation(() => userDataMock),
-      getAllTeamsMembers: jest
-        .fn()
-        .mockImplementation(() => teamMembersDataMock),
+      getUsers: jest.fn().mockReturnValue(userDataMock),
     };
 
     const module: TestingModule = await Test.createTestingModule({
@@ -62,18 +63,20 @@ describe('UsersController', () => {
     expect(userServiceMock.getUsers).toHaveBeenCalled();
   });
 
-  it('when getAllTeamsMembers is called, correct array of grouped users is returned', async () => {
-    const result = await controller.getAllTeamsMembers();
-    expect(result).toEqual(teamMembersDataMock);
-    expect(userServiceMock.getAllTeamsMembers).toHaveBeenCalled();
+  test.each([
+    ['team1', team1MembersDataMock],
+    ['team2', team2MembersDataMock],
+  ])('should return all members from %s', async (teamName, members) => {
+    userServiceMock.getTeamMembers = jest.fn().mockReturnValue(members);
+    const result = await controller.getTeamMembers(teamName);
+    expect(result).toEqual(members);
   });
 
-  // I would add integration tests to test uploading the file, instead of this
   it('file uploaded successfully', async () => {
     const fileName = 'users.csv';
 
     const imageBuffer = (await fileToBuffer(
-      Path.join(__dirname, fileName),
+      Path.join(__dirname, 'testData', fileName),
     )) as Buffer;
     const myReadableStreamBuffer = new streamBuffer.ReadableStreamBuffer({
       frequency: 10,

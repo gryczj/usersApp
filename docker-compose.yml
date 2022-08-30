@@ -1,0 +1,39 @@
+version: '3.1'
+
+services:
+  users-management:
+    container_name: users_app
+    image: users-app:1.0.0
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    command: npm run start:dev
+    depends_on:
+      - db
+    ports:
+      - "3000:3000"
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      DB_NAME: users
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    restart: unless-stopped
+  db:
+    image: postgres:14.1-alpine
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: users
+    ports:
+      - '5432:5432'
+    volumes:
+      - db:/var/lib/postgresql/data
+#      - ./db/init.sql:/docker-entrypoint-initdb.d/create_tables.sql
+volumes:
+  db:
+    driver: local
